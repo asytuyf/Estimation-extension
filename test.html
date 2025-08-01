@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <link rel="stylesheet" href="https://cdn.webulous.io/shared/lib/bootstrap/3.3.1/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://cdn.webulous.io/shared/lib/fontawesome/4.7.0/font-awesome.min.css" />
+        <link rel="stylesheet" href="https://cdn.webulous.io/shared/lib/fancybox/3.0.47/jquery.fancybox.css" />
+        <link rel="stylesheet" href="https://cdn.webulous.io/shared/lib/sumoselect/v3.0.3/sumoselect--webulousimmo.css" />
+        <link rel="stylesheet" href="https://cdn.webulous.io/shared/lib/ion-range-slider/2.0.3/css/ion.rangeSlider.css" />
+        <link rel="stylesheet" href="https://cdn.webulous.io/templates/t1/css/ion.rangeSlider.skinWebulousimmo.css" />
+        <link rel="stylesheet" href="https://cdn.webulous.io/templates/t1/css/site.css?v=2020.04.08" id="skin" />
+        <link rel="stylesheet" href="css/custom.css" />
+        <link rel="stylesheet" href="https://cdn.webulous.io/sites/AAJQ63RXDL/css/user.css?20250629222921" />
+
+    
+
+    
+</head>
+
+<body>
+<div class="col-md-7 col-md-push-1" style="padding-bottom: 40px;">
+    <!-- Progress Bar -->
+    <div class="progress-bar-container" style="margin-bottom: 25px; background-color: #eee; border-radius: 5px; height: 10px;">
+      <div id="progress-bar-fill" style="width: 20%; height: 10px; background-color: #E6B433; border-radius: 5px; transition: width 0.4s ease-in-out;"></div>
+    </div>
+  
+    <form id="estimator-form" name="estimator-form" novalidate>
+      <!-- Step 1: Address -->
+      <div class="form-step" id="step-1">
+        <h3 class="h4" style="text-align: center; margin-bottom: 20px;">Quelle est l'adresse du bien à estimer ?</h3>
+        <div class="form-group">
+          <label for="country">Pays</label>
+          <select class="form-control" id="country" required>
+            <option value="be">Belgique</option>
+            <option value="lu">Luxembourg</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="agence">Agence</label>
+          <select class="form-control" id="agence" required>
+            <option value="aubange">GROUPE ARCADE AUBANGE</option>
+            <option value="luxembourg">GROUPE ARCADE LUXEMBOURG</option>
+            <option value="dinant">GROUPE ARCADE DINANT</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="address-input">Adresse</label>
+          <input type="text" class="form-control" id="address-input" required placeholder="Commencez à taper votre rue...">
+          <input type="hidden" id="postal_code">
+          <input type="hidden" id="locality">
+        </div>
+        <p class="text-muted text-center" style="font-size: 12px;">La précision de l'adresse est essentielle pour une estimation juste.</p>
+      </div>
+  
+      <!-- Step 2: Property Type -->
+      <div class="form-step" id="step-2" style="display: none;">
+        <h3 class="h4" style="text-align: center; margin-bottom: 25px; color: #E6B433; font-weight: bold;">De quel type de bien s'agit-il ?</h3>
+        <div class="selection-container-vertical">
+          <div class="selection-button" data-value="maison">Maison</div>
+          <div class="selection-button" data-value="appartement">Appartement</div>
+          <div class="selection-button" data-value="terrain">Terrain</div>
+          <div class="selection-button" data-value="commerce">Commerce / Bureau</div>
+        </div>
+        <input type="hidden" id="property-type" required>
+      </div>
+  
+      <!-- Step 3: Sub-Type (Conditional) -->
+      <div class="form-step" id="step-3" style="display: none;">
+        <h3 class="h4" style="text-align: center; margin-bottom: 25px; color: #E6B433; font-weight: bold;">De quel sous-type de bien s'agit-il ?</h3>
+        <div id="house-subtypes" style="display: none;" class="selection-container-vertical">
+          <div class="selection-button" data-value="4facades">4 façades</div>
+          <div class="selection-button" data-value="3facades">3 façades</div>
+          <div class="selection-button" data-value="mitoyenne">Mitoyenne</div>
+        </div>
+        <div id="apartment-subtypes" style="display: none;" class="selection-container-vertical">
+          <div class="selection-button" data-value="appartement">Appartement</div>
+          <div class="selection-button" data-value="penthouse">Penthouse</div>
+          <div class="selection-button" data-value="duplex">Duplex</div>
+          <div class="selection-button" data-value="studio">Studio</div>
+        </div>
+        <div id="terrain-subtypes" style="display: none;" class="selection-container-vertical">
+          <div class="selection-button" data-value="constructible">Constructible</div>
+          <div class="selection-button" data-value="agricole">Agricole</div>
+          <div class="selection-button" data-value="commercial">Commercial/Industriel</div>
+          <div class="selection-button" data-value="autre">Autre</div>
+        </div>
+        <input type="hidden" id="property-subtype">
+      </div>
+  
+      <!-- Step 4: Details (Numbers) -->
+      <div class="form-step" id="step-4" style="display: none;">
+        <h3 class="h4" style="text-align: center; margin-bottom: 20px;">Pourrions-nous en savoir un peu plus ?</h3>
+        <div class="form-group">
+          <label>Surface habitable (m²)</label>
+          <input type="number" class="form-control" id="square-meters" required placeholder="ex: 180">
+        </div>
+        <div class="form-group" id="anneeDiv">
+          <label>Année de construction</label>
+          <input type="number" class="form-control" id="year-built" placeholder="ex: 1995">
+        </div>
+        <div class="form-group" id="chambresDiv">
+          <label>Nombre de chambres</label>
+          <input type="number" class="form-control" id="bedrooms" value="3">
+        </div>
+        <div class="form-group" id="bainsDiv">
+          <label>Nombre de salles de bain</label>
+          <input type="number" class="form-control" id="bathrooms" value="1">
+        </div>
+      </div>
+  
+      <!-- Step 5: Condition -->
+      <div class="form-step" id="step-5" style="display: none;">
+        <h3 class="h4" style="text-align: center; margin-bottom: 20px;">Quel est l'état du bien ?</h3>
+        <div class="form-group" id="cuisineDiv">
+          <label for="condition-kitchen">Qualité de la cuisine</label>
+          <select class="form-control" id="condition-kitchen">
+            <option value="normale" selected>Normale</option>
+            <option value="simple">Simple</option>
+            <option value="qualitative">Qualitative</option>
+            <option value="luxe">Très qualitative / Luxe</option>
+          </select>
+        </div>
+        <div class="form-group" id="etatDiv">
+          <label for="condition-general">État général</label>
+          <select class="form-control" id="condition-general">
+            <option value="bon" selected>Bon état</option>
+            <option value="excellent">Excellent / Rénové</option>
+            <option value="arenover">À rénover</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  
+    <!-- Navigation Buttons (outside the form steps) -->
+    <div id="navigation-controls" style="margin-top: 25px;">
+      <div class="row">
+        <div class="col-xs-6">
+          <button type="button" id="prev-btn" class="btn btn-default btn-block" style="padding: 12px; font-size: 16px; display: none;">
+            <i class="fa fa-arrow-left" style="margin-right: 8px;"></i> Précédent
+          </button>
+        </div>
+        <div class="col-xs-6">
+          <button type="button" id="next-btn" class="btn btn-primary btn-block" style="padding: 12px; font-size: 16px;">
+            Suivant <i class="fa fa-arrow-right" style="margin-left: 8px;"></i>
+          </button>
+          <button type="submit" form="estimator-form" id="submit-btn" class="btn btn-primary btn-block" style="padding: 12px; font-size: 16px; display: none;">
+            <i class="fa fa-calculator" style="margin-right: 8px;"></i> Obtenir mon estimation
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- The Results Section (remains hidden) -->
+    <div id="results-container" style="display: none; margin-top: 40px; text-align: center; background-color: #f9f9f9; padding: 25px; border: 1px solid #ddd; border-radius: 4px;">
+    </div>
+  </div>
+    <!-- Custom Styles for Cards -->
+    <style>
+        .selection-container { display: flex; flex-wrap: wrap; gap: 15px; }
+        .selection-card, .selection-card-small {
+            border: 1px solid #ddd; border-radius: 4px; padding: 20px; text-align: center;
+            cursor: pointer; transition: all 0.2s ease; width: 100%; height: 100%;
+        }
+        .selection-card:hover, .selection-card-small:hover { border-color: #E6B433; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .selection-card.active, .selection-card-small.active { border-color: #E6B433; background-color: #fef8e7; border-width: 2px; }
+        .selection-card i { color: #888; margin-bottom: 10px; }
+        .selection-card.active i { color: #E6B433; }
+        .selection-card p { font-weight: bold; margin: 0; }
+        .selection-card-small { padding: 15px; font-weight: bold; }
+
+        .selection-container-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .selection-button {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .selection-button:hover {
+            border-color: #E6B433;
+        }
+        .selection-button.active {
+            border-color: #E6B433;
+            background-color: #fef8e7;
+            border-width: 2px;
+        }
+    </style>
+</div>
+
+<!--- JS logic for the multi-step form -->
+        <script src="https://cdn.webulous.io/shared/lib/modernizr/2.8.3/modernizr.min.js"></script>
+        <script src="https://cdn.webulous.io/shared/lib/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://cdn.webulous.io/shared/lib/bootstrap/3.3.1/bootstrap.js"></script>
+        <script src="https://cdn.webulous.io/shared/lib/sumoselect/v3.0.3/jquery.sumoselect.js"></script>
+        <script src="https://cdn.webulous.io/shared/lib/owlcarousel/2.2.1/owl.carousel.js"></script>
+        <script src="https://cdn.webulous.io/shared/lib/fancybox/3.0.47/jquery.fancybox.js"></script>
+        <script src="https://cdn.webulous.io/shared/lib/text-rotator/jquery.simple-text-rotator.js"></script>
+        <script src="https://cdn.webulous.io/shared/lib/appear/jquery.appear.js"></script>
+        <script src="https://cdn.webulous.io/shared/lib/w-consent/w-consent.js"></script>
+        <script src="https://cdn.webulous.io/templates/t1/js/template.js?v=2022.11.08"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.9/jquery.validate.unobtrusive.min.js"></script>
+    
+    <script src="https://cdn.webulous.io/sites/AAJQ63RXDL/js/user.js?20250629222921"></script>
+    <script>
+        $(document).ready(function() {
+            let currentStep = 1;
+            const totalSteps = 5;
+            const formData = {};
+        
+            function updateProgressBar() {
+                const progress = (currentStep / totalSteps) * 100;
+                $('#progress-bar-fill').css('width', progress + '%');
+            }
+        
+            function showStep(step) {
+                currentStep = step;
+                $('.form-step').hide();
+                const stepDiv = $('#step-' + step);
+                stepDiv.show();
+                updateProgressBar();
+        
+                if (step === 3) {
+                    $('#house-subtypes').toggle(formData.type === 'maison');
+                    $('#apartment-subtypes').toggle(formData.type === 'appartement');
+                    $('#terrain-subtypes').toggle(formData.type === 'terrain');
+                }
+        
+                if (step === 4) {
+                    const isTerrain = formData.type === 'terrain';
+                    const isSpecial = isTerrain || formData.type === 'commerce';
+                    $('#anneeDiv').toggleClass('hidden', isTerrain);
+                    $('#chambresDiv, #bainsDiv').toggleClass('hidden', isSpecial);
+                    $('#square-meters').prop('required', true);
+                }
+        
+                if (step === 5) {
+                    const isSpecial = formData.type === 'terrain' || formData.type === 'commerce';
+                    $('#cuisineDiv').toggleClass('hidden', isSpecial);
+                    $('#etatDiv').toggleClass('hidden', formData.type === 'terrain');
+                }
+        
+                $('#prev-btn').toggle(step > 1);
+                const isFinalStep = step === 5 || (step === 4 && (formData.type === 'terrain' || formData.type === 'commerce'));
+                $('#next-btn').toggle(!isFinalStep);
+                $('#submit-btn').toggle(isFinalStep);
+            }
+        
+            $('#next-btn').on('click', function() {
+                if (!validateStep(currentStep)) return;
+        
+                if (currentStep === 1) {
+                    formData.country = $('#country').val();
+                    formData.agence = $('#agence').val();
+                    formData.adresse = $('#address-input').val();
+                }
+        
+                if (currentStep === 2) {
+                    if (['maison', 'appartement', 'terrain'].includes(formData.type)) {
+                        showStep(3);
+                    } else {
+                        showStep(4);
+                    }
+                    return;
+                }
+        
+                if (currentStep === 3) {
+                    showStep(4);
+                    return;
+                }
+        
+                if (currentStep === 4) {
+                    showStep(5);
+                    return;
+                }
+        
+                showStep(currentStep + 1);
+            });
+        
+            $('#prev-btn').on('click', function() {
+                if (currentStep === 4 && ['terrain', 'commerce'].includes(formData.type)) {
+                    showStep(2);
+                } else if (currentStep === 4 && ['maison', 'appartement'].includes(formData.type)) {
+                    showStep(3);
+                } else if (currentStep === 3) {
+                    showStep(2);
+                } else if (currentStep === 5) {
+                    showStep(4);
+                } else {
+                    showStep(currentStep - 1);
+                }
+            });
+        
+            $('.selection-button').on('click', function() {
+                const container = $(this).closest('.selection-container-vertical');
+                container.find('.selection-button').removeClass('active');
+                $(this).addClass('active');
+                const value = $(this).data('value');
+                const hiddenInput = container.siblings('input[type=hidden]');
+                hiddenInput.val(value);
+                if (hiddenInput.attr('id') === 'property-type') formData.type = value;
+                if (hiddenInput.attr('id') === 'property-subtype') formData.subtype = value;
+            });
+        
+            $('#estimator-form').on('submit', function(event) {
+                event.preventDefault();
+                if (validateStep(currentStep)) {
+                    $('#estimator-form, #navigation-controls, .progress-bar-container').hide();
+                    formData.surface = parseFloat($('#square-meters').val()) || 0;
+                    formData.annee = parseInt($('#year-built').val()) || (formData.type === 'terrain' ? 0 : new Date().getFullYear());
+                    formData.chambres = parseInt($('#bedrooms').val()) || 0;
+                    formData.bains = parseInt($('#bathrooms').val()) || 0;
+                    formData.cuisine = $('#condition-kitchen').val() || 'normale';
+                    formData.etat = $('#condition-general').val() || 'bon';
+        
+                    var priceRange = calculatePriceRange(formData);
+                    var formattedLower = new Intl.NumberFormat('fr-BE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(priceRange.lower);
+                    var formattedUpper = new Intl.NumberFormat('fr-BE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(priceRange.upper);
+                    var displayText = formattedLower + " - " + formattedUpper;
+        
+                    $('#results-container').html(`
+                        <h2 style="margin-top: 0; font-size: 22px; color: #E6B433; font-weight: bold; margin-bottom: 10px;">Votre estimation en ligne</h2>
+                        <p style="font-size: 42px; font-weight: bold; color: #337ab7; margin: 20px 0; line-height: 1.2;"><span>${displayText}</span></p>
+                        <p class="text-muted" style="margin-bottom: 15px;">Basée sur un bien de type <strong>${formData.subtype || formData.type}</strong> à <strong>${formData.adresse}</strong>.</p>
+                        <p class="text-muted" style="margin-bottom: 15px;">Cette estimation est une base approximative et peut varier. Pour une évaluation plus précise et gratuite, contactez-nous.</p>
+                        <a href="Contact.html#section-form" class="btn btn-primary" style="background-color: #E6B433; border-color: #E6B433;">Demander une expertise gratuite</a>
+                    `).slideDown();
+                }
+            });
+        
+            // Handle Enter key to go to next step
+            $('#step-1').on('keydown', 'input, select', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    $('#next-btn').click();
+                }
+            });
+        
+            $('#step-2, #step-3').on('keydown', 'input, select', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    $('#next-btn').click();
+                }
+            });
+        
+            $('#step-4').on('keydown', 'input, select', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    $('#next-btn').click();
+                }
+            });
+        
+            $('#step-5').on('keydown', 'input, select', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    $('#submit-btn').click();
+                }
+            });
+        
+            function validateStep(step) {
+                let isValid = true;
+                $('#step-' + step).find('[required]:visible').each(function() {
+                    if (!$(this).val()) {
+                        isValid = false;
+                        $(this).css('border-color', 'red');
+                    } else {
+                        $(this).css('border-color', '');
+                    }
+                });
+                return isValid;
+            }
+        
+            showStep(1);
+        });
+        
+        function calculatePriceRange(data) {
+            let basePrice = 0;
+            const isBelgium = data.agence === 'aubange' || data.agence === 'dinant';
+        
+            if (data.type === 'terrain') {
+                if (isBelgium) {
+                    if (data.subtype === 'constructible') basePrice = 150;
+                    else if (data.subtype === 'agricole') basePrice = 3;
+                    else if (data.subtype === 'commercial') basePrice = 200;
+                    else basePrice = 100;
+                } else {
+                    if (data.subtype === 'constructible') basePrice = 1000;
+                    else if (data.subtype === 'agricole') basePrice = 5;
+                    else if (data.subtype === 'commercial') basePrice = 800;
+                    else basePrice = 400;
+                }
+            } else if (data.type === 'commerce') {
+                basePrice = isBelgium ? 1500 : 5000;
+            } else {
+                if (data.agence === 'aubange') {
+                    basePrice = data.type === 'appartement' ? 2437 : 1609;
+                } else if (data.agence === 'dinant') {
+                    basePrice = data.type === 'appartement' ? 2270 : 1539;
+                } else {
+                    basePrice = data.type === 'appartement' ? 8373 : 6138;
+                }
+            }
+        
+            let multipliers = 1;
+            if (data.type === 'maison') {
+                if (data.subtype === '4facades') multipliers *= 1.2;
+                else if (data.subtype === '3facades') multipliers *= 1.1;
+                else if (data.subtype === 'mitoyenne') multipliers *= 0.9;
+            } else if (data.type === 'appartement') {
+                if (data.subtype === 'penthouse') multipliers *= 1.3;
+                else if (data.subtype === 'duplex') multipliers *= 1.1;
+                else if (data.subtype === 'studio') multipliers *= 0.8;
+            }
+        
+            if (data.etat === 'arenover') multipliers *= 0.8;
+            else if (data.etat === 'excellent') multipliers *= 1.2;
+        
+            if (!['terrain', 'commerce'].includes(data.type)) {
+                if (data.cuisine === 'simple') multipliers *= 0.9;
+                else if (data.cuisine === 'qualitative') multipliers *= 1.1;
+                else if (data.cuisine === 'luxe') multipliers *= 1.3;
+            }
+        
+            if (data.annee && data.annee < 1950) multipliers *= 0.9;
+            else if (data.annee && data.annee > 2000) multipliers *= 1.1;
+        
+            const roomBonus = (data.chambres * 5000) + (data.bains * 10000);
+            const centralPrice = (data.surface * basePrice * multipliers) + roomBonus;
+            const rangePercentage = 0.10;
+        
+            return {
+                lower: Math.round(centralPrice * (1 - rangePercentage)),
+                upper: Math.round(centralPrice * (1 + rangePercentage))
+            };
+        }
+        
+        let autocomplete;
+        function initAutocomplete() {
+            const country = $('#country').val().toUpperCase();
+            autocomplete = new google.maps.places.Autocomplete(document.getElementById('address-input'), {
+                types: ['geocode'],
+                componentRestrictions: { country: country }
+            });
+            autocomplete.addListener('place_changed', () => {
+                const place = autocomplete.getPlace();
+                let postalCode = '', locality = '';
+                place.address_components.forEach(component => {
+                    if (component.types.includes('postal_code')) postalCode = component.long_name;
+                    if (component.types.includes('locality')) locality = component.long_name;
+                });
+                $('#postal_code').val(postalCode);
+                $('#locality').val(locality);
+            });
+        }
+        
+        $('#country').on('change', initAutocomplete);
+        initAutocomplete();
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBoc5cxQsbj6ZRYcDYJuhPBYBVTSBnHVuo&libraries=places&callback=initAutocomplete"></script>
+</body>
+</html>
